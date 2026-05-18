@@ -36,8 +36,12 @@ self.addEventListener('activate', (e) => {
 self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET') return;
 
-  // Jangan cache request ke API Tadabbur (sebab AI perlukan internet)
-  if (e.request.url.includes('/api/tadabbur')) {
+  // Jangan cache request ke API luaran yang perlukan data terkini (Tadabbur, Waktu Solat, Lokasi)
+  if (
+    e.request.url.includes('/api/tadabbur') || 
+    e.request.url.includes('api.aladhan.com') ||
+    e.request.url.includes('api.bigdatacloud.net')
+  ) {
     return; 
   }
 
