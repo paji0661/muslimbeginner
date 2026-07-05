@@ -16,7 +16,14 @@ self.addEventListener('install', (e) => {
       return cache.addAll(PRE_CACHE_RESOURCES);
     })
   );
-  self.skipWaiting();
+  // Do not call self.skipWaiting() here anymore so we can show an update prompt
+});
+
+// Listen for a message from the app to skip waiting when the user clicks 'Update'
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
 });
 
 self.addEventListener('activate', (e) => {
@@ -36,7 +43,7 @@ self.addEventListener('activate', (e) => {
 self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET') return;
 
-  // Jangan cache request ke API luaran yang perlukan data terkini (Tadabbur, Waktu Solat, Lokasi)
+  // Jangan cache request ke API luaran
   if (
     e.request.url.includes('/api/tadabbur') || 
     e.request.url.includes('api.aladhan.com') ||
@@ -45,27 +52,40 @@ self.addEventListener('fetch', (e) => {
     return; 
   }
 
+  // Network-First untuk fail HTML (supaya sentiasa dapat update terbaru bila online)
+  if (e.request.mode === 'navigate' || e.request.destination === 'document') {
+    e.respondWith(
+      fetch(e.request).then((networkResponse) => {
+        const responseToCache = networkResponse.clone();
+        caches.open(CACHE_NAME).then((cache) => {
+          cache.put(e.request, responseToCache);
+        });
+        return networkResponse;
+      }).catch(() => {
+        // Fallback jika offline
+        return caches.match(e.request).then((cachedResponse) => {
+          return cachedResponse || caches.match(BASE_PATH + 'index.html');
+        });
+      })
+    );
+    return;
+  }
+
+  // Stale-While-Revalidate untuk JS, CSS & Gambar (Laju + Auto Update di belakang tadbir)
   e.respondWith(
     caches.match(e.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-
-      return fetch(e.request).then((networkResponse) => {
-        // Simpan fail baru ke cache secara dinamik (termasuk JS/CSS assets)
+      const fetchPromise = fetch(e.request).then((networkResponse) => {
         if (networkResponse && networkResponse.status === 200) {
-          const responseToCache = networkResponse.clone();
           caches.open(CACHE_NAME).then((cache) => {
-            cache.put(e.request, responseToCache);
+            cache.put(e.request, networkResponse.clone());
           });
         }
         return networkResponse;
       }).catch(() => {
-        // Fallback jika offline dan fail tiada dalam cache
-        if (e.request.mode === 'navigate') {
-          return caches.match(BASE_PATH + 'index.html');
-        }
+        // Abaikan error jika offline (cache akan terus digunakan)
       });
+
+      return cachedResponse || fetchPromise;
     })
   );
 });
