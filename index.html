@@ -9,8 +9,30 @@
     <meta name="theme-color" content="#6366f1" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Muslim Beginner</title>
-    <script type="module" crossorigin src="/muslimbeginner/assets/index-DmP6DJL5.js"></script>
-    <link rel="stylesheet" crossorigin href="/muslimbeginner/assets/index-CQn_b1Yu.css">
+
+    <!-- Tailwind CSS v3 CDN (Play) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      // Extend Tailwind with custom config for Haiyalasollah
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'system-ui', 'sans-serif'],
+              arabic: ['"Noto Naskh Arabic"', 'Amiri', '"Traditional Arabic"', 'serif'],
+            },
+            colors: {
+              brand: {
+                dark: '#0a0f1a',
+                darker: '#060b14',
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <script type="module" crossorigin src="/muslimbeginner/assets/index-D-j-hOjQ.js"></script>
+    <link rel="stylesheet" crossorigin href="/muslimbeginner/assets/index-CXM7GrP5.css">
   </head>
   <body>
     <div id="root"></div>
