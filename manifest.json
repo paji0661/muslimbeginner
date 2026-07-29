@@ -5,8 +5,8 @@
   "start_url": "/muslimbeginner/",
   "id": "/muslimbeginner/",
   "display": "standalone",
-  "background_color": "#0f172a",
-  "theme_color": "#6366f1",
+  "background_color": "#000000",
+  "theme_color": "#000000",
   "icons": [
     {
       "src": "favicon-16x16.png",
