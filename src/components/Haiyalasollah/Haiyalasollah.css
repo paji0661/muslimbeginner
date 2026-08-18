@@ -1,0 +1,650 @@
+/* ============================================================
+ *  HAIYALASOLLAH — Styles (Ultra-Compact Poster)
+ * ============================================================
+ *  100vh layout: all prayer steps fit on ONE screen.
+ *  Flex-based space distribution, no scrolling.
+ *  Bacaan mode switches to scrollable study layout.
+ * ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@400;500;600;700;800;900&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap');
+
+/* ── Tokens ───────────────────────────────────────────────── */
+:root {
+  --bg: #000000;
+  --glass-bg: rgba(255,255,255,0.04);
+  --glass-border: rgba(255,255,255,0.08);
+  --emerald: #10b981;
+  --gold: #fbbf24;
+}
+
+/* ── Reset ────────────────────────────────────────────────── */
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;font-size:16px;}
+@media(min-width:1920px){html{font-size:18px;}}
+@media(min-width:2560px){html{font-size:22px;}}
+.haiyalasollah-app {font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:#f1f5f9;min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+
+/* ── Scrollbar ────────────────────────────────────────────── */
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:rgba(16,185,129,0.3);border-radius:3px;}
+
+/* ── Background ───────────────────────────────────────────── */
+.bg-pattern{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse 80% 50% at 50% -20%,rgba(16,185,129,0.08),transparent),radial-gradient(ellipse 60% 40% at 80% 100%,rgba(99,102,241,0.06),transparent);pointer-events:none;}
+
+/* ── Glass Card (Home) ────────────────────────────────────── */
+.glass-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);}
+.glass-card:hover{background:rgba(255, 255, 255, 0.08);border-color:rgba(255, 255, 255, 0.2);transform:translateY(-5px);box-shadow:none;}
+.prayer-card{position:relative;overflow:hidden;cursor:pointer;}
+.prayer-card .card-glow{position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(16,185,129,.06) 0%,transparent 70%);opacity:0;transition:opacity .5s;pointer-events:none;}
+.prayer-card:hover .card-glow{opacity:1;}
+
+/* ── Utilities ────────────────────────────────────────────── */
+.text-gradient{background:linear-gradient(135deg,#10b981,#34d399,#6ee7b7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.text-gradient-gold{background:linear-gradient(135deg,#fbbf24,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.ornament{display:inline-block;color:rgba(16,185,129,.4);font-size:1rem;letter-spacing:.3rem;}
+.footer-divider{height:1px;background:linear-gradient(to right,transparent,rgba(16,185,129,.2),transparent);}
+
+/* ── Animations ───────────────────────────────────────────── */
+@keyframes fadeInUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
+.animate-fade-in-up{animation:fadeInUp .6s ease-out forwards;}
+.animate-fade-in{animation:fadeIn .5s ease-out forwards;}
+.animate-float{animation:float 3s ease-in-out infinite;}
+.stagger-1{animation-delay:.05s;}.stagger-2{animation-delay:.1s;}.stagger-3{animation-delay:.15s;}.stagger-4{animation-delay:.2s;}.stagger-5{animation-delay:.25s;}
+
+
+/* ══════════════════════════════════════════════════════════════
+   GUIDE PAGE — 100vh POSTER LAYOUT (no scroll)
+   ══════════════════════════════════════════════════════════════ */
+
+.guide-page {
+  position: relative;
+  z-index: 10;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── Top Bar ──────────────────────────────────────────────── */
+
+.guide-topbar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.5rem;
+  background: rgba(10, 15, 26, 0.95);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+@media (min-width: 768px) {
+  .guide-topbar {
+    padding: 0.5rem 1rem;
+    gap: 1rem;
+  }
+}
+
+/* Back button */
+.topbar-back {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+  color: #94a3b8;
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.topbar-back:hover {
+  background: rgba(255,255,255,0.08);
+  color: #e2e8f0;
+}
+.topbar-back-text {
+  display: none;
+}
+@media (min-width: 640px) {
+  .topbar-back-text { display: inline; }
+}
+
+/* Title */
+.topbar-title {
+  flex: 1;
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.topbar-title-name {
+  font-weight: 800;
+  font-size: 0.85rem;
+  background: linear-gradient(135deg,#10b981,#34d399);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.topbar-title-meta {
+  font-size: 0.65rem;
+  color: #64748b;
+  font-weight: 500;
+  margin-left: 0.4rem;
+}
+@media (min-width: 768px) {
+  .topbar-title-name { font-size: 1.1rem; }
+  .topbar-title-meta { font-size: 0.8rem; }
+}
+
+/* Legend */
+.topbar-legend {
+  display: none;
+}
+@media (min-width: 768px) {
+  .topbar-legend {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0 1rem;
+    border-left: 1px solid rgba(255,255,255,0.05);
+    margin-left: 0.5rem;
+  }
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Checkboxes */
+.topbar-checks {
+  display: flex;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  .topbar-checks { gap: 0.6rem; }
+}
+
+.chk {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.4rem;
+  border: 1px solid rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.02);
+  transition: all 0.2s;
+  user-select: none;
+}
+.chk:hover {
+  background: rgba(16,185,129,0.06);
+  border-color: rgba(16,185,129,0.15);
+}
+
+.chk input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.chk-box {
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 0.25rem;
+  border: 2px solid rgba(148,163,184,0.4);
+  background: rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.chk-tick {
+  width: 0.65rem;
+  height: 0.65rem;
+  color: white;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: all 0.15s;
+}
+
+.chk input:checked + .chk-box {
+  background: var(--emerald);
+  border-color: var(--emerald);
+  box-shadow: 0 0 8px rgba(16,185,129,0.4);
+}
+.chk input:checked + .chk-box .chk-tick {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.chk-text {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #94a3b8;
+  white-space: nowrap;
+}
+@media (min-width: 768px) {
+  .chk-text { font-size: 0.75rem; }
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   GUIDE BODY — Flex column, each rakaat fills equal space
+   ══════════════════════════════════════════════════════════ */
+
+.guide-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 0;
+  padding: 0.25rem 3vw;
+  gap: 2px;
+}
+
+
+/* ── Rakaat Section ───────────────────────────────────────── */
+
+.rakaat-section {
+  flex: 0 1 25%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* Rakaat label bar — super thin */
+.rakaat-bar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  padding: 0.15rem 0;
+}
+
+.rakaat-bar-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--emerald);
+  box-shadow: 0 0 6px rgba(16,185,129,0.4);
+}
+
+.rakaat-bar-label {
+  font-size: 0.6rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #34d399;
+}
+
+.rakaat-bar-sub {
+  font-size: 0.55rem;
+  color: #475569;
+  font-weight: 500;
+}
+
+
+/* ── Rakaat Strip — horizontal row of thumbnails ──────────── */
+
+.rakaat-strip {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(11, 1fr);
+  gap: 3px;
+  min-height: 0;
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   THUMBNAIL (fills space, image + label overlay)
+   ══════════════════════════════════════════════════════════ */
+
+.thumb {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0.4rem;
+  overflow: hidden;
+  background: #1a3a2a;
+  border: 1px solid rgba(255,255,255,0.04);
+  transition: border-color 0.2s;
+}
+
+.thumb:hover {
+  border-color: rgba(16,185,129,0.25);
+}
+
+.thumb-special {
+  border-color: rgba(251,191,36,0.2) !important;
+}
+.thumb-special:hover {
+  border-color: rgba(251,191,36,0.4) !important;
+}
+
+/* Image wrapper — fills all available space */
+.thumb-img {
+  flex: 1;
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+  background: #1a3a2a;
+}
+
+.thumb-img img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* Dual-image styles (Salam) */
+.thumb-img-half {
+  flex: 1; /* each takes half the space */
+  min-height: 0;
+}
+
+.thumb-separator {
+  flex-shrink: 0;
+  height: 2px;
+  background: var(--bg);
+  position: relative;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.thumb-sep-line {
+  width: 100%;
+  height: 1px;
+  background: rgba(16,185,129,0.3);
+  box-shadow: 0 0 4px rgba(16,185,129,0.5);
+}
+
+/* Step number — top-left */
+.thumb-num {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 1.2rem;
+  height: 1.2rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  font-weight: 800;
+  font-size: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+}
+
+.num-rukun   { background: linear-gradient(135deg, #10b981, #059669) !important; color: white !important; }
+.num-wajib   { background: linear-gradient(135deg, #3b82f6, #2563eb) !important; color: white !important; }
+.num-sunat   { background: linear-gradient(135deg, #fbbf24, #d97706) !important; color: white !important; }
+.num-intiqal { background: linear-gradient(135deg, #cbd5e1, #94a3b8) !important; color: #0f172a !important; }
+
+@media (min-width: 768px) {
+  .thumb-num {
+    width: 1.4rem;
+    height: 1.4rem;
+    font-size: 0.6rem;
+    top: 4px;
+    left: 4px;
+  }
+}
+
+/* Label overlay — bottom gradient */
+.thumb-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.2rem 0.3rem 0.2rem;
+  background: linear-gradient(transparent, rgba(0,0,0,0.85));
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  z-index: 2;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.thumb-name {
+  font-size: 0.45rem;
+  font-weight: 700;
+  color: #e2e8f0;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  /* Allow wrapping for long names */
+  word-break: break-word;
+}
+
+@media (min-width: 640px) {
+  .thumb-name { font-size: 0.55rem; }
+  .thumb-overlay { padding: 1.5rem 0.4rem 0.3rem; }
+}
+@media (min-width: 1024px) {
+  .thumb-name { font-size: 0.65rem; }
+}
+@media (min-width: 1920px) {
+  .thumb-name { font-size: 0.75rem; }
+  .thumb-num { width: 1.6rem; height: 1.6rem; font-size: 0.7rem; }
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   RECITATION PANEL (inside each thumb, hidden by default)
+   ══════════════════════════════════════════════════════════ */
+
+.thumb-rec {
+  display: none;
+  flex-shrink: 0;
+}
+
+.thumb-rec.rec-open {
+  display: block;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.rec-inner {
+  padding: 0.35rem 0.35rem 0.4rem;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+@media (min-width: 768px) {
+  .rec-inner { padding: 0.5rem; }
+}
+
+.rec-section {
+  margin-bottom: 0.3rem;
+}
+.rec-section:last-child { margin-bottom: 0; }
+
+.rec-badge {
+  display: inline-block;
+  font-size: 0.4rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.05rem 0.3rem;
+  border-radius: 0.2rem;
+  margin-bottom: 0.15rem;
+}
+.rec-arab { background: rgba(16,185,129,0.15); color: #34d399; }
+.rec-rumi { background: rgba(99,102,241,0.15); color: #a5b4fc; }
+.rec-terj { background: rgba(148,163,184,0.1); color: #94a3b8; }
+
+@media (min-width: 768px) {
+  .rec-badge { font-size: 0.5rem; }
+}
+
+.rec-arabic {
+  font-family: 'Noto Naskh Arabic', 'Amiri', serif;
+  direction: rtl;
+  text-align: right;
+  line-height: 1.8;
+  font-size: 0.7rem;
+  color: #fbbf24;
+  background: rgba(0,0,0,0.2);
+  border-radius: 0.3rem;
+  padding: 0.3rem 0.4rem;
+  white-space: pre-line;
+}
+@media (min-width: 768px)  { .rec-arabic { font-size: 0.75rem; } }
+@media (min-width: 1920px) { .rec-arabic { font-size: 0.85rem; } }
+
+.rec-rumi-text {
+  font-style: italic;
+  color: #a5b4fc;
+  font-size: 0.55rem;
+  line-height: 1.5;
+  white-space: pre-line;
+}
+@media (min-width: 768px) { .rec-rumi-text { font-size: 0.6rem; } }
+
+.rec-terj-text {
+  color: #94a3b8;
+  font-size: 0.5rem;
+  line-height: 1.4;
+  white-space: pre-line;
+}
+@media (min-width: 768px) { .rec-terj-text { font-size: 0.55rem; } }
+
+
+/* ══════════════════════════════════════════════════════════
+   SCROLLABLE / STUDY MODE (when Bacaan is ON)
+   ══════════════════════════════════════════════════════════ */
+
+.guide-page.scrollable {
+  height: auto;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: visible;
+}
+
+.guide-page.scrollable .guide-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+/* In scrollable mode, give rakaat sections explicit height */
+.guide-page.scrollable .rakaat-section {
+  flex: none;
+}
+
+/* Give strips wrap + explicit sizing */
+.guide-page.scrollable .rakaat-strip {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.guide-page.scrollable .thumb {
+  flex: none;
+  /* ~5 per row on desktop, fewer on mobile */
+  width: calc(20% - 0.35rem);
+  min-width: 140px;
+}
+
+.guide-page.scrollable .thumb-img {
+  flex: none;
+  aspect-ratio: 4 / 3;
+}
+
+@media (max-width: 639px) {
+  .guide-page.scrollable .thumb {
+    width: calc(50% - 0.25rem);
+    min-width: 0;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .guide-page.scrollable .thumb {
+    width: calc(33.33% - 0.3rem);
+  }
+}
+
+@media (min-width: 1440px) {
+  .guide-page.scrollable .thumb {
+    width: calc(16.66% - 0.35rem);
+  }
+}
+
+/* More spacious in scrollable mode */
+.guide-page.scrollable .guide-body {
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
+
+.guide-page.scrollable .rakaat-bar {
+  padding: 0.4rem 0;
+}
+
+.guide-page.scrollable .rec-arabic { font-size: 0.75rem; padding: 0.3rem 0.4rem; }
+.guide-page.scrollable .rec-rumi-text { font-size: 0.6rem; }
+.guide-page.scrollable .rec-terj-text { font-size: 0.55rem; }
+.guide-page.scrollable .rec-badge { font-size: 0.45rem; }
+
+@media (min-width: 768px) {
+  .guide-page.scrollable .rec-arabic { font-size: 0.8rem; }
+  .guide-page.scrollable .rec-rumi-text { font-size: 0.65rem; }
+  .guide-page.scrollable .rec-terj-text { font-size: 0.6rem; }
+}
+
+
+
+/* ══════════════════════════════════════════════════════════
+   MOBILE: Allow some scroll for 4-rakaat prayers on tiny screens
+   (unavoidable at <640px with 10 thumbs per row)
+   ══════════════════════════════════════════════════════════ */
+
+@media (max-width: 639px) {
+  .rakaat-strip {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .thumb {
+    flex: none;
+    /* 5 per row on mobile */
+    width: calc(20% - 3px);
+  }
+
+  .thumb-name { font-size: 0.38rem; }
+  .thumb-num { width: 0.9rem; height: 0.9rem; font-size: 0.4rem; top: 2px; left: 2px; }
+  .thumb-tag-dot { width: 4px; height: 4px; }
+  .thumb-overlay { padding: 0.8rem 0.2rem 0.15rem; gap: 0.1rem; }
+  .rakaat-bar-label { font-size: 0.5rem; }
+  .rakaat-bar-sub { font-size: 0.45rem; }
+  .rakaat-bar-dot { width: 5px; height: 5px; }
+}
